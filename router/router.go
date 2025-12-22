@@ -10,13 +10,11 @@ import (
 func Route(g *fiber.App) {
 	v1 := g.Group("/v1")
 
-
 	v1.Get("/fetch/segment", api.FetchSegmentHandler)
-	v1.Post("/upload" , api.UploadVideoHandler)
+	v1.Post("/upload", api.UploadVideoHandler)
+	v1.Post("/video", api.CreateVideoDataHandler)
 
-
-
-	g.Get("/health-check" , func(c *fiber.Ctx) error {
-		return c.JSON(map[string]interface{}{"status" : "server is up and running" , "version" : config.ReleaseVersion})
+	g.Get("/health-check", func(c *fiber.Ctx) error {
+		return c.JSON(map[string]interface{}{"status": "server is up and running", "version": config.ReleaseVersion})
 	})
 }

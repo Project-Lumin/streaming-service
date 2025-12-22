@@ -1,8 +1,38 @@
 package api
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"os"
+	"path/filepath"
+	"streaming-service/utils"
 
-func UploadVideoHandler(c *fiber.Ctx)error {
+	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
+)
 
-	return c.JSON(nil)
+func UploadVideoHandler(c *fiber.Ctx) error {
+	var (
+		fileId = uuid.New().String()
+	)
+	form, err := c.MultipartForm()
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(utils.ErrorResponse(err.Error()))
+	}
+	files := form.File["video"]
+	if len(files) == 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(utils.ErrorResponse("no files found"))
+	}
+	if len(files) > 1 {
+		return c.Status(fiber.StatusBadRequest).JSON(utils.ErrorResponse("upload only 1 file"))
+	}
+	file := files[0]
+
+	if err := os.MkdirAll(StoreDir, os.ModePerm); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(utils.ErrorResponse("internal server error"))
+	}
+
+	filePath := filepath.Join(StoreDir, fileId+".mp4")
+	if err := c.SaveFile(file, filePath); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(utils.ErrorResponse(err.Error()))
+	}
+	return c.Status(fiber.StatusCreated).JSON(utils.SuccessResponse(fileId))
 }
