@@ -1,7 +1,15 @@
 package api
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"fmt"
+
+	"github.com/gofiber/fiber/v2"
+)
 
 func FetchSegmentHandler(c *fiber.Ctx) error {
-	return c.JSON(nil)
+	 videoId := c.Params("videoId")
+    file := c.Params("*")
+
+    path := fmt.Sprintf("./videos/%s/%s", videoId, file)
+    return c.SendFile(path)
 }
