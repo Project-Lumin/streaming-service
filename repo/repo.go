@@ -84,7 +84,7 @@ func DB_CreateUserPrefetchedVideos(object *models.CreatePrefetchedVideosInput) (
 	// Delete existing prefetched videos for user
 	_, err := config.Database().Collection(UserPrefetchedVideos).DeleteMany(
 		context.Background(),
-		bson.M{"user_id": object.UserId},
+		bson.M{"userid": object.UserId},
 	)
 	if err != nil {
 		return nil,err
