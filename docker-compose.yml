@@ -11,5 +11,5 @@ services:
     environment:
       - PORT=8000
     volumes:
-      - ./videos:/app/videos   # <-- mount host folder to container
+      - ./videos:/app/videos   
     restart: unless-stopped
